@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dubwise">
+<meta name="theme-color" content="#14120f">
+<title>Dubwise Tuner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#14120f;
+  --plate:#1e1b16;
+  --plate-hi:#29251e;
+  --line:#3a342a;
+  --ink:#efe6d4;
+  --muted:#a0957f;
+  --amber:#f0a93b;
+  --amber-dim:#8a5f22;
+  --live:#7cc47f;
+  --warn:#e0735a;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Atkinson Hyperlegible",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font:16px/1.5 var(--body);
+  padding-inline:max(16px, env(safe-area-inset-left, 0px));
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:calc(120px + env(safe-area-inset-bottom, 0px));
+  -webkit-tap-highlight-color:transparent;
+}
+[hidden]{display:none!important}
+.wrap{max-width:1040px;margin:0 auto}
+
+/* Header / faceplate */
+header{padding-block:28px 12px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.brand h1{
+  font:800 clamp(2.4rem,7vw,3.6rem)/0.9 var(--display);
+  letter-spacing:.01em;text-transform:uppercase;margin:0;
+}
+.brand h1 span{color:var(--amber)}
+.brand p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+.clock{font:600 .8rem var(--mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;text-align:right}
+.clock b{display:block;color:var(--ink);font-size:1.05rem;letter-spacing:.04em}
+
+/* Tuning dial = genre bands */
+.dial{
+  position:relative;margin-block:14px 22px;
+  background:linear-gradient(180deg,var(--plate-hi),var(--plate));
+  border:1px solid var(--line);border-radius:10px;
+  padding:14px 10px 10px;
+  overflow-x:auto;
+}
+.scale{
+  height:14px;margin:0 6px 8px;
+  background:repeating-linear-gradient(90deg,var(--amber-dim) 0 1px,transparent 1px 12px),
+             repeating-linear-gradient(90deg,var(--amber) 0 1px,transparent 1px 60px);
+  background-size:auto 7px, auto 14px;background-repeat:repeat-x;background-position:bottom,bottom;
+  opacity:.55;
+}
+.bands{display:flex;gap:4px;min-width:max-content}
+.band{
+  appearance:none;border:0;background:transparent;color:var(--muted);
+  font:800 1.25rem/1 var(--display);text-transform:uppercase;letter-spacing:.04em;
+  padding:10px 14px 12px;border-radius:6px;cursor:pointer;position:relative;
+}
+.band small{display:block;font:400 .66rem var(--mono);letter-spacing:.06em;margin-top:4px;opacity:.8}
+.band[aria-selected="true"]{color:var(--ground);background:var(--amber)}
+.band:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.intro{color:var(--muted);max-width:62ch;margin:0 0 18px;font-size:.95rem}
+
+/* Station grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.st{
+  display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:start;
+  text-align:left;width:100%;
+  background:var(--plate);border:1px solid var(--line);border-radius:8px;
+  color:var(--ink);padding:14px 12px 12px 14px;cursor:pointer;font:inherit;
+  transition:border-color .15s, background .15s;
+}
+.st:hover{border-color:var(--amber-dim)}
+.st:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.st .name{font:700 1.02rem/1.25 var(--body)}
+.st .where{grid-column:1;color:var(--muted);font-size:.85rem}
+.st .meta{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font:600 .68rem/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid var(--line);color:var(--muted);border-radius:4px;padding:4px 6px}
+.chip.uk{color:var(--amber);border-color:var(--amber-dim)}
+.fav{
+  grid-row:1 / span 2;grid-column:2;appearance:none;border:0;background:transparent;
+  color:var(--muted);font-size:1.3rem;line-height:1;padding:2px 2px 6px 8px;cursor:pointer;
+}
+.fav[aria-pressed="true"]{color:var(--amber)}
+.st.on{border-color:var(--amber);background:linear-gradient(180deg,#2d2518,var(--plate))}
+.st.on .name::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--live);margin-right:8px;vertical-align:2px;box-shadow:0 0 8px var(--live)}
+.st.bad{opacity:.55}
+.empty{color:var(--muted);padding:24px 0}
+
+/* Search */
+.search{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.search input,.search select{
+  font:inherit;color:var(--ink);background:var(--plate);border:1px solid var(--line);
+  border-radius:6px;padding:10px 12px;min-width:0;
+}
+.search input{flex:1 1 220px}
+.search button{
+  font:800 1rem var(--display);letter-spacing:.06em;text-transform:uppercase;
+  background:var(--amber);color:var(--ground);border:0;border-radius:6px;padding:10px 18px;cursor:pointer;
+}
+.search input:focus-visible,.search select:focus-visible,.search button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* Now playing deck */
+.deck{
+  position:fixed;left:0;right:0;bottom:0;z-index:5;
+  background:rgba(20,18,15,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);
+  padding:12px max(16px, env(safe-area-inset-left, 0px)) calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.deck-in{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.play{
+  flex:none;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--amber);color:var(--ground);display:grid;place-items:center;
+}
+.play:disabled{background:var(--line);color:var(--muted);cursor:default}
+.play:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.play svg{width:22px;height:22px;fill:currentColor}
+.np{flex:1;min-width:0}
+.np .t{font:800 1.25rem/1.1 var(--display);text-transform:uppercase;letter-spacing:.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np .s{font:400 .78rem var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np .s.live{color:var(--live)}
+.np .s.err{color:var(--warn)}
+.vu{display:flex;gap:3px;align-items:flex-end;height:22px;flex:none}
+.vu i{width:4px;background:var(--live);border-radius:1px;height:4px;opacity:.35}
+.playing .vu i{opacity:1;animation:vu 1s ease-in-out infinite}
+.vu i:nth-child(2){animation-delay:.2s}.vu i:nth-child(3){animation-delay:.45s}
+.vu i:nth-child(4){animation-delay:.1s}.vu i:nth-child(5){animation-delay:.35s}
+@keyframes vu{0%,100%{height:5px}50%{height:22px}}
+.tools{display:flex;align-items:center;gap:10px;flex:none}
+.tools input[type=range]{width:110px;accent-color:var(--amber)}
+.sleep{
+  font:600 .72rem var(--mono);letter-spacing:.05em;text-transform:uppercase;
+  background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:6px 8px;cursor:pointer;
+}
+.sleep.set{color:var(--amber);border-color:var(--amber-dim)}
+@media (max-width:620px){
+  .tools input[type=range]{display:none}
+  .vu{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .playing .vu i{animation:none;height:14px}
+}
+footer{color:var(--muted);font-size:.8rem;margin-top:36px;max-width:70ch}
+footer a{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Dub<span>wise</span> Tuner</h1>
+      <p>Reggae, dub, jazz and classical from London, Kingston, New York and beyond.</p>
+    </div>
+    <div class="clock" aria-live="off">Kingston · London · NYC<b id="clock">--:-- · --:-- · --:--</b></div>
+  </header>
+
+  <nav class="dial" aria-label="Genres">
+    <div class="scale" aria-hidden="true"></div>
+    <div class="bands" role="tablist" id="bands"></div>
+  </nav>
+
+  <p class="intro" id="intro"></p>
+
+  <div id="finder" class="search" hidden>
+    <select id="findBy" aria-label="Search by">
+      <option value="tag">Genre tag</option>
+      <option value="name">Station name</option>
+    </select>
+    <input id="findQ" type="search" placeholder="roots, dub, lovers rock, bebop…" aria-label="Search text" value="roots reggae">
+    <select id="findCountry" aria-label="Country">
+      <option value="">Anywhere</option>
+      <option value="GB">United Kingdom</option>
+      <option value="JM">Jamaica</option>
+      <option value="US">United States</option>
+      <option value="FR">France</option>
+      <option value="DE">Germany</option>
+      <option value="NL">Netherlands</option>
+    </select>
+    <button id="findGo" type="button">Scan</button>
+  </div>
+
+  <section class="grid" id="grid" aria-live="polite"></section>
+
+  <footer>
+    Tap a station to tune in. Starred stations are saved in this browser. If a station's address has moved,
+    the tuner looks it up in the free <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>
+    directory and retries. The Find band searches that same directory for thousands more stations.
+  </footer>
+</div>
+
+<div class="deck" id="deck">
+  <div class="deck-in">
+    <button class="play" id="playBtn" aria-label="Play" disabled>
+      <svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4.5v15l13-7.5z"/></svg>
+    </button>
+    <div class="np">
+      <div class="t" id="npTitle">Pick a station</div>
+      <div class="s" id="npStatus">Tuner idle</div>
+    </div>
+    <div class="vu" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="tools">
+      <button class="sleep" id="sleepBtn" type="button" aria-label="Sleep timer">Sleep off</button>
+      <input type="range" id="vol" min="0" max="1" step="0.01" value="0.9" aria-label="Volume">
+    </div>
+  </div>
+</div>
+
+<audio id="audio" preload="none" playsinline></audio>
+
+<script>
+const STATIONS = [
+  // Reggae
+  {g:"reggae", name:"NTS – Island Time", where:"London, UK", cc:"GB", fmt:"MP3", url:"https://stream-mixtape-geo.ntslive.net/mixtape21", note:"Roots, rocksteady, lovers rock"},
+  {g:"reggae", name:"Irie FM", where:"Ocho Rios, Jamaica", cc:"JM", fmt:"MP3", url:"https://usa19.fastcast4u.com:7430/", note:"Jamaica's all-reggae FM"},
+  {g:"reggae", name:"Alpha Boys School Radio", where:"Kingston, Jamaica", cc:"JM", fmt:"MP3", url:"https://alphaboys-live.streamguys1.com/alphaboys.mp3", note:"Ska, roots and dub from the Alpha legacy"},
+  {g:"reggae", name:"SomaFM Heavyweight Reggae", where:"San Francisco, US", cc:"US", fmt:"MP3 256", url:"https://ice5.somafm.com/reggae-256-mp3", note:"Listener-supported, no ads"},
+  {g:"reggae", name:"FIP Reggae", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/fipreggae-hifi.aac", note:"Radio France, ad-free"},
+  {g:"reggae", name:"Real Roots Radio", where:"Online", cc:"", fmt:"MP3", url:"https://streams.radio.co/s1df61e0af/listen", note:"Roots and culture"},
+  {g:"reggae", name:"Reggae Arte Radio", where:"Online", cc:"", fmt:"MP3", url:"https://listen.radioking.com/radio/269104/stream/314461", note:"Roots and dub selection"},
+
+  // Dub
+  {g:"dub", name:"King Dub Radio", where:"London, UK", cc:"GB", fmt:"MP3", url:"http://london-dedicated.myautodj.com:8862/stream", note:"Sound system dub"},
+  {g:"dub", name:"UK Roots FM", where:"United Kingdom", cc:"GB", fmt:"MP3", url:"http://138.201.198.218:8043/", note:"UK roots and dub"},
+  {g:"dub", name:"Dr. Dick's Dub Shack", where:"Online", cc:"", fmt:"MP3", url:"https://streamer.radio.co/s0635c8b0d/listen", note:"Dub, from King Tubby to now"},
+  {g:"dub", name:"Kingdub", where:"Online", cc:"", fmt:"MP3", url:"https://kingdub.tv:8443/kingdub.mp3", note:"Dub and steppers"},
+  {g:"dub", name:"Dubsideradio", where:"Online", cc:"", fmt:"MP3", url:"https://puma.streemlion.com:5515/stream", note:"Dub around the clock"},
+  {g:"dub", name:"The Dub Lounge", where:"Online", cc:"", fmt:"MP3", url:"http://176.9.7.145:8311/stream", note:"Dub and chill"},
+
+  // Jazz
+  {g:"jazz", name:"WBGO Jazz 88.3", where:"Newark / NYC, US", cc:"US", fmt:"MP3", url:"https://ais-sa8.cdnstream1.com/3629_128.mp3", note:"New York's jazz station"},
+  {g:"jazz", name:"WKCR 89.9", where:"New York, US", cc:"US", fmt:"MP3", url:"https://wkcr.streamguys1.com/live", note:"Columbia University radio"},
+  {g:"jazz", name:"Jazz24", where:"Seattle, US", cc:"US", fmt:"MP3 256", url:"https://knkx-live-a.edge.audiocdn.com/6285_256k", note:"Classic and current jazz"},
+  {g:"jazz", name:"TSF Jazz", where:"Paris, France", cc:"FR", fmt:"MP3", url:"https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3", note:"Paris jazz FM"},
+  {g:"jazz", name:"FIP Jazz", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/fipjazz-hifi.aac", note:"Radio France, ad-free"},
+  {g:"jazz", name:"SomaFM Sonic Universe", where:"San Francisco, US", cc:"US", fmt:"MP3 256", url:"https://ice2.somafm.com/sonicuniverse-256-mp3", note:"Avant-garde and modern jazz"},
+  {g:"jazz", name:"Radio Swiss Jazz", where:"Switzerland", cc:"CH", fmt:"AAC", url:"https://stream.srg-ssr.ch/m/rsj/aacp_96", note:"Ad-free public radio"},
+  {g:"jazz", name:"Linn Jazz", where:"Glasgow, UK", cc:"GB", fmt:"MP3", url:"http://radio.linn.co.uk:8000/autodj", note:"From the hi-fi makers"},
+
+  // Classical
+  {g:"classical", name:"BBC Radio 3", where:"London, UK", cc:"GB", fmt:"HLS", url:"https://as-hls-ww-live.akamaized.net/pool_23461179/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d128000.norewind.m3u8", note:"Speech and music"},
+  {g:"classical", name:"WQXR 105.9", where:"New York, US", cc:"US", fmt:"MP3", url:"https://stream.wqxr.org/wqxr", note:"New York's classical station"},
+  {g:"classical", name:"WFMT", where:"Chicago, US", cc:"US", fmt:"MP3", url:"https://wfmt.streamguys1.com/main-source", note:"Classical and fine arts"},
+  {g:"classical", name:"CRB Classical 99.5", where:"Boston, US", cc:"US", fmt:"MP3", url:"https://wgbh-live.streamguys1.com/classical-hi", note:"Home of the BSO broadcasts"},
+  {g:"classical", name:"France Musique", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/francemusique-hifi.aac", note:"Radio France"},
+  {g:"classical", name:"Radio Swiss Classic", where:"Switzerland", cc:"CH", fmt:"MP3", url:"https://stream.srg-ssr.ch/m/rsc_de/mp3_128", note:"Ad-free, no talk"},
+  {g:"classical", name:"Linn Classical", where:"Glasgow, UK", cc:"GB", fmt:"MP3", url:"http://radio.linn.co.uk:8004/stream", note:"From the hi-fi makers"},
+];
+STATIONS.forEach(s => s.id = s.url);
+
+const BANDS = [
+  {id:"reggae", label:"Reggae", freq:"88.3", intro:"Roots, rocksteady and lovers rock, from London and Kingston out to Paris and California."},
+  {id:"dub", label:"Dub", freq:"93.1", intro:"Echo, spring reverb and bass weight. UK sound-system stations and round-the-clock dub streams."},
+  {id:"jazz", label:"Jazz", freq:"98.7", intro:"New York's own WBGO and WKCR, plus Paris, Seattle and Glasgow."},
+  {id:"classical", label:"Classical", freq:"104.5", intro:"BBC Radio 3, WQXR and the great public classical stations."},
+  {id:"fav", label:"Starred", freq:"★", intro:"Your starred stations, saved in this browser."},
+  {id:"find", label:"Find", freq:"scan", intro:"Search the Radio Browser directory. Try “dub”, “roots reggae”, “dancehall”, “bebop” or a station name, and narrow by country."},
+];
+
+const RB_HOSTS = ["https://de1.api.radio-browser.info","https://de2.api.radio-browser.info","https://fi1.api.radio-browser.info"];
+
+const $ = id => document.getElementById(id);
+const audio = $("audio");
+let band = "reggae", current = null, triedFallback = false, findResults = [], sleepAt = 0, sleepTimer = null;
+
+// storage (best-effort)
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let favs = store.get("dubwise.favs", []);
+band = store.get("dubwise.band", "reggae");
+audio.volume = store.get("dubwise.vol", 0.9);
+$("vol").value = audio.volume;
+
+function isFav(s){ return favs.some(f => f.id === s.id); }
+function toggleFav(s){
+  if(isFav(s)) favs = favs.filter(f => f.id !== s.id);
+  else favs.push({g:s.g||"find", name:s.name, where:s.where, cc:s.cc, fmt:s.fmt, url:s.url, note:s.note||"", id:s.id});
+  store.set("dubwise.favs", favs);
+  render();
+}
+
+function renderBands(){
+  $("bands").innerHTML = "";
+  BANDS.forEach(b => {
+    const el = document.createElement("button");
+    el.className = "band"; el.type = "button"; el.setAttribute("role","tab");
+    el.setAttribute("aria-selected", b.id === band);
+    el.innerHTML = `${b.label}<small>${b.freq}</small>`;
+    el.onclick = () => { band = b.id; store.set("dubwise.band", band); renderBands(); render(); };
+    $("bands").appendChild(el);
+  });
+}
+
+function card(s){
+  const el = document.createElement("div");
+  el.className = "st" + (current && current.id === s.id ? " on" : "") + (s.bad ? " bad" : "");
+  el.tabIndex = 0; el.setAttribute("role","button");
+  el.setAttribute("aria-label", `Play ${s.name}, ${s.where}`);
+  const chips = [];
+  if(s.cc === "GB") chips.push(`<span class="chip uk">UK</span>`);
+  if(s.fmt) chips.push(`<span class="chip">${esc(s.fmt)}</span>`);
+  if(s.note) chips.push(`<span class="chip">${esc(s.note)}</span>`);
+  el.innerHTML = `<div class="name">${esc(s.name)}</div>
+    <button class="fav" type="button" aria-label="Star ${esc(s.name)}" aria-pressed="${isFav(s)}">${isFav(s) ? "★" : "☆"}</button>
+    <div class="where">${esc(s.where || "Online")}</div>
+    <div class="meta">${chips.join("")}</div>`;
+  el.querySelector(".fav").onclick = e => { e.stopPropagation(); toggleFav(s); };
+  el.onclick = () => tune(s);
+  el.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); tune(s); } };
+  return el;
+}
+
+function render(){
+  const b = BANDS.find(x => x.id === band) || BANDS[0];
+  $("intro").textContent = b.intro;
+  $("finder").hidden = band !== "find";
+  const grid = $("grid"); grid.innerHTML = "";
+  let list = band === "fav" ? favs : band === "find" ? findResults : STATIONS.filter(s => s.g === band);
+  if(!list.length){
+    const p = document.createElement("p"); p.className = "empty";
+    p.textContent = band === "fav" ? "No starred stations yet. Tap ☆ on any station to keep it here."
+                  : band === "find" ? "Press Scan to search." : "No stations.";
+    grid.appendChild(p); return;
+  }
+  list.forEach(s => grid.appendChild(card(s)));
+}
+
+function esc(t){ return String(t ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function status(text, cls){ const el = $("npStatus"); el.textContent = text; el.className = "s" + (cls ? " " + cls : ""); }
+
+function setPlayIcon(playing){
+  $("playIcon").innerHTML = playing ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4.5v15l13-7.5z"/>';
+  $("playBtn").setAttribute("aria-label", playing ? "Pause" : "Play");
+  $("deck").classList.toggle("playing", playing);
+}
+
+function tune(s){
+  if(current && current.id === s.id && !audio.paused){ audio.pause(); return; }
+  current = s; triedFallback = false;
+  $("npTitle").textContent = s.name;
+  $("playBtn").disabled = false;
+  status("Tuning… " + (s.where || ""));
+  start(s.url);
+  render();
+  if("mediaSession" in navigator){
+    navigator.mediaSession.metadata = new MediaMetadata({title:s.name, artist:s.where || "Internet radio", album:"Dubwise Tuner"});
+  }
+}
+
+let attempt = 0, failing = false;
+function start(url){
+  attempt++; failing = false;
+  audio.src = url;
+  const p = audio.play();
+  if(p && p.catch) p.catch(err => {
+    if(!err || err.name === "AbortError") return;
+    if(err.name === "NotAllowedError"){ setPlayIcon(false); status("Tap ▶ to start the sound"); return; }
+    onFail(err.name);
+  });
+}
+
+async function rbFetch(path){
+  for(const h of RB_HOSTS){
+    try{
+      const r = await fetch(h + path, {headers:{"Accept":"application/json"}});
+      if(r.ok) return await r.json();
+    }catch(e){}
+  }
+  return null;
+}
+
+async function onFail(why){
+  if(!current || failing) return;
+  failing = true;
+  const myAttempt = attempt;
+  if(!triedFallback){
+    triedFallback = true;
+    status("No signal. Looking up a new address…");
+    const q = encodeURIComponent(current.name.replace(/[–—-].*$/, "").trim() || current.name);
+    const res = await rbFetch(`/json/stations/byname/${q}?hidebroken=true&order=clickcount&reverse=true&limit=10`);
+    if(myAttempt !== attempt) return;
+    const alt = (res || []).map(x => x.url_resolved || x.url).find(u => u && u.startsWith("https") && u !== current.url)
+             || (res || []).map(x => x.url_resolved || x.url).find(u => u && u !== current.url);
+    if(alt){ status("Retrying on a new address…"); start(alt); return; }
+  }
+  current.bad = true;
+  setPlayIcon(false);
+  const code = audio.error ? " (error " + audio.error.code + ")" : (why ? " (" + why + ")" : "");
+  status("Off air or blocked" + code + ". Try another station.", "err");
+  render();
+}
+
+audio.addEventListener("playing", () => { setPlayIcon(true); if(current){ current.bad = false; status("On air · " + (current.where || "live"), "live"); } });
+audio.addEventListener("waiting", () => status("Buffering…"));
+audio.addEventListener("pause", () => { setPlayIcon(false); if(current && !current.bad) status("Paused"); });
+audio.addEventListener("error", () => onFail());
+
+$("playBtn").onclick = () => {
+  if(!current) return;
+  if(audio.paused){ status("Tuning…"); start(audio.src || current.url); } else audio.pause();
+};
+$("vol").oninput = e => { audio.volume = +e.target.value; store.set("dubwise.vol", audio.volume); };
+
+if("mediaSession" in navigator){
+  navigator.mediaSession.setActionHandler("play", () => $("playBtn").click());
+  navigator.mediaSession.setActionHandler("pause", () => audio.pause());
+}
+
+// Sleep timer: off → 30 → 60 → 90 → off
+const SLEEP_STEPS = [0, 30, 60, 90];
+$("sleepBtn").onclick = () => {
+  const cur = sleepAt ? Math.ceil((sleepAt - Date.now())/60000) : 0;
+  const next = SLEEP_STEPS.find(m => m > cur + 0.5) || 0;
+  clearTimeout(sleepTimer);
+  if(next){
+    sleepAt = Date.now() + next*60000;
+    sleepTimer = setTimeout(() => { audio.pause(); sleepAt = 0; drawSleep(); }, next*60000);
+  } else sleepAt = 0;
+  drawSleep();
+};
+function drawSleep(){
+  const b = $("sleepBtn");
+  if(!sleepAt){ b.textContent = "Sleep off"; b.classList.remove("set"); return; }
+  const m = Math.max(1, Math.ceil((sleepAt - Date.now())/60000));
+  b.textContent = "Sleep " + m + "m"; b.classList.add("set");
+}
+setInterval(drawSleep, 30000);
+
+// Find band
+async function scan(){
+  const by = $("findBy").value, q = $("findQ").value.trim(), cc = $("findCountry").value;
+  if(!q) return;
+  $("grid").innerHTML = '<p class="empty">Scanning the dial…</p>';
+  const params = new URLSearchParams({hidebroken:"true", order:"clickcount", reverse:"true", limit:"40"});
+  params.set(by, q); if(by === "tag") params.set("tagExact","false");
+  if(cc) params.set("countrycode", cc);
+  const res = await rbFetch("/json/stations/search?" + params.toString());
+  if(!res){ $("grid").innerHTML = '<p class="empty">The directory didn’t answer. Check your connection and scan again.</p>'; return; }
+  const seen = new Set();
+  findResults = res.filter(x => (x.url_resolved || x.url)).filter(x => { const k = x.name.trim().toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true; })
+    .map(x => ({
+      g:"find", name:x.name.trim(), cc:x.countrycode,
+      where:[x.state, x.country].filter(Boolean).join(", ") || "Online",
+      fmt:[x.codec, x.bitrate ? x.bitrate : ""].filter(Boolean).join(" "),
+      url:x.url_resolved || x.url, id:x.stationuuid || x.url_resolved,
+      note:(x.tags || "").split(",").slice(0,2).join(", ")
+    }));
+  render();
+}
+$("findGo").onclick = scan;
+$("findQ").onkeydown = e => { if(e.key === "Enter") scan(); };
+
+// World clock
+function tick(){
+  const f = tz => new Intl.DateTimeFormat("en-GB", {hour:"2-digit", minute:"2-digit", timeZone:tz}).format(new Date());
+  $("clock").textContent = `${f("America/Jamaica")} · ${f("Europe/London")} · ${f("America/New_York")}`;
+}
+tick(); setInterval(tick, 30000);
+
+renderBands(); render();
+</script>
+</body>
+</html>
