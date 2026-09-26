@@ -181,7 +181,7 @@ footer a{color:var(--amber)}
       <div class="rgg" aria-hidden="true"><i></i><i></i><i></i></div>
       <p>Music, news, weather and live scanners from London, Kingston, New York and beyond.</p>
     </div>
-    <div class="clock" aria-live="off">Kingston · London · NYC<b id="clock">--:-- · --:-- · --:--</b></div>
+    <div class="clock" aria-live="off">Kingston · London · Philly<b id="clock">--:-- · --:-- · --:--</b></div>
   </header>
 
   <nav class="dial" aria-label="Genres">
@@ -299,6 +299,7 @@ const STATIONS = [
   {g:"classical", name:"Classic FM", where:"London, UK", cc:"GB", q:"Classic FM", note:"UK's classical hits"},
   {g:"classical", name:"Linn Classical", where:"Glasgow, UK", cc:"GB", fmt:"MP3", url:"http://radio.linn.co.uk:8004/stream", q:"Linn Classical", note:"From the hi-fi makers"},
   {g:"classical", name:"NTS – Sheet Music", where:"London, UK", cc:"GB", fmt:"MP3", url:"https://stream-mixtape-geo.ntslive.net/mixtape35", note:"Modern composition"},
+  {g:"classical", name:"WRTI 90.1", where:"Philadelphia, US", cc:"US", q:"WRTI", note:"Philly classical and jazz"},
   {g:"classical", name:"WQXR 105.9", where:"New York, US", cc:"US", fmt:"MP3", url:"https://stream.wqxr.org/wqxr", note:"New York's classical station"},
   {g:"classical", name:"WFMT", where:"Chicago, US", cc:"US", fmt:"MP3", url:"https://wfmt.streamguys1.com/main-source", note:"Classical and fine arts"},
   {g:"classical", name:"CRB Classical 99.5", where:"Boston, US", cc:"US", fmt:"MP3", url:"https://wgbh-live.streamguys1.com/classical-hi", note:"Boston Symphony broadcasts"},
@@ -351,6 +352,10 @@ const STATIONS = [
   {g:"meditate", name:"Whisperings Solo Piano", where:"Online", cc:"", fmt:"MP3", url:"https://pianosolo.streamguys1.com/live", note:"Quiet solo piano"},
 
   // News
+  {g:"news", name:"KYW Newsradio 1060", where:"Philadelphia, US", cc:"US", q:"KYW", note:"Philly all-news, traffic and weather"},
+  {g:"news", name:"WHYY 90.9", where:"Philadelphia, US", cc:"US", fmt:"MP3", url:"https://whyy.streamguys1.com/whyy-mp3", q:"WHYY", note:"Philly NPR station"},
+  {g:"news", name:"WURD 900", where:"Philadelphia, US", cc:"US", q:"WURD", note:"Philly talk and community news"},
+  {g:"news", name:"WPHT 1210", where:"Philadelphia, US", cc:"US", q:"WPHT", note:"Philly talk radio"},
   {g:"news", name:"BBC World Service", where:"London, UK", cc:"GB", q:"BBC World Service", note:"Global news, 24/7"},
   {g:"news", name:"BBC Radio 4", where:"London, UK", cc:"GB", q:"BBC Radio 4", note:"News, talk and drama"},
   {g:"news", name:"LBC", where:"London, UK", cc:"GB", q:"LBC", note:"London news and talk"},
@@ -364,11 +369,24 @@ const STATIONS = [
   {g:"news", name:"franceinfo", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/franceinfo-hifi.aac", note:"French all-news"},
 
   // Weather & NOAA
+  {g:"weather", name:"NOAA Weather Radio KIH28", where:"Philadelphia, US", cc:"US", fmt:"MP3", url:"https://radio.weatherusa.net/NWR/KIH28_3.mp3", q:"KIH28", note:"162.475 MHz · Philadelphia forecast"},
+  {g:"weather", name:"NOAA Weather Radio WNG704", where:"Hibernia Park, PA", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/44541", note:"162.425 MHz · Chester County"},
+  {g:"weather", name:"NOAA Weather Radio WXL39", where:"Allentown, PA", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/39868", note:"162.400 MHz · Lehigh Valley"},
   {g:"weather", name:"NOAA Weather Radio KWO35", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/25412", note:"162.550 MHz · NYC forecast"},
   {g:"weather", name:"NY / NJ Marine", where:"New York Harbor, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/17329", note:"Coast Guard and marine weather"},
   {g:"weather", name:"NOAA Weather Radio", where:"United States", cc:"US", q:"NOAA Weather Radio", note:"Top NOAA stream in the directory"},
 
   // Police & Fire
+  {g:"scanner", name:"Philadelphia Police Citywide", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/4603", note:"PPD citywide"},
+  {g:"scanner", name:"Philadelphia Fire North", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/15747", note:"Fire dispatch"},
+  {g:"scanner", name:"Philadelphia Fire South & Medics", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/34250", note:"Fire and EMS"},
+  {g:"scanner", name:"PPD Central", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/17310", note:"Police dispatch"},
+  {g:"scanner", name:"PPD East", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/21297", note:"Police dispatch"},
+  {g:"scanner", name:"PPD Northeast", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/45495", note:"Police dispatch"},
+  {g:"scanner", name:"PPD Northwest", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/18836", note:"Police dispatch"},
+  {g:"scanner", name:"PPD South", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/15102", note:"Police dispatch"},
+  {g:"scanner", name:"PPD Southwest", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/15195", note:"Police dispatch"},
+  {g:"scanner", name:"SEPTA Regional Rail", where:"Philadelphia, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/13975", note:"Rail dispatch"},
   {g:"scanner", name:"FDNY Citywide Dispatch", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/47800", note:"All boroughs"},
   {g:"scanner", name:"FDNY Five Boroughs", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/9358", note:"Fire dispatch"},
   {g:"scanner", name:"FDNY Manhattan", where:"Manhattan, NYC", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/46554", note:"Fire dispatch"},
@@ -386,9 +404,9 @@ const BANDS = [
   {id:"world", label:"World", freq:"101.1", intro:"Afrobeats, soca, salsa, Bollywood, Arabic and Celtic, with Paris and New Orleans stations that roam the globe."},
   {id:"classical", label:"Classical", freq:"104.5", intro:"BBC Radio 3, WQXR and the great public classical stations."},
   {id:"meditate", label:"Meditation", freq:"106.2", intro:"Ambient drones, nature sounds and quiet piano for meditation, focus and sleep. Pair with the sleep timer."},
-  {id:"news", label:"News", freq:"AM 1010", intro:"World, national and local news from London, New York, Washington, Kingston and Paris."},
-  {id:"weather", label:"Weather", freq:"162.55", intro:"NOAA Weather Radio for New York City and harbor marine weather. To add your own area, paste its Broadcastify feed link in the Find band."},
-  {id:"scanner", label:"Police & Fire", freq:"154.4", intro:"Live FDNY, NYPD and EMS dispatch through Broadcastify. A short sponsor message may play first. To add your own area, find its feed on broadcastify.com and paste the link in the Find band."},
+  {id:"news", label:"News", freq:"AM 1010", intro:"Philadelphia news first: KYW, WHYY, WURD and WPHT. Then London, New York, Washington, Kingston and Paris."},
+  {id:"weather", label:"Weather", freq:"162.55", intro:"NOAA Weather Radio KIH28 for Philadelphia, plus Chester County, the Lehigh Valley, New York City and harbor marine weather."},
+  {id:"scanner", label:"Police & Fire", freq:"154.4", intro:"Live Philadelphia police, fire and EMS dispatch by district, plus SEPTA rail and New York City, through Broadcastify. A short sponsor message may play first. To add your own area, find its feed on broadcastify.com and paste the link in the Find band."},
   {id:"fav", label:"Starred", freq:"★", intro:"Your starred stations, saved in this browser."},
   {id:"find", label:"Find", freq:"scan", intro:"Search the Radio Browser directory. Try “dub”, “roots reggae”, “dancehall”, “bebop” or a station name, and narrow by country."},
 ];
