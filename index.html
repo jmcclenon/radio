@@ -179,7 +179,7 @@ footer a{color:var(--amber)}
     <div class="brand">
       <h1><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="Lion's Den logo"><polygon points="32.0,2.0 37.0,12.6 46.4,5.6 45.9,17.3 57.5,15.4 51.6,25.6 62.8,29.3 52.8,35.5 61.0,44.0 49.3,44.9 52.6,56.2 41.8,51.6 39.4,63.1 32.0,54.0 24.6,63.1 22.2,51.6 11.4,56.2 14.7,44.9 3.0,44.0 11.2,35.5 1.2,29.3 12.4,25.6 6.5,15.4 18.1,17.3 17.6,5.6 27.0,12.6" fill="#f0a93b"/><circle cx="32" cy="34" r="19" fill="#b8741f"/><circle cx="22" cy="23" r="4.5" fill="#f6c870"/><circle cx="42" cy="23" r="4.5" fill="#f6c870"/><ellipse cx="32" cy="36" rx="13" ry="14.5" fill="#f6c870"/><ellipse cx="27" cy="33" rx="2.2" ry="1.5" fill="#14120f"/><ellipse cx="37" cy="33" rx="2.2" ry="1.5" fill="#14120f"/><path d="M28.5 39h7l-3.5 4z" fill="#14120f"/><path d="M32 43v2.5M32 45.5q-3 2-5 0M32 45.5q3 2 5 0" stroke="#14120f" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="nm">Lion's <span>Den</span></span></h1>
       <div class="rgg" aria-hidden="true"><i></i><i></i><i></i></div>
-      <p>Reggae, dub, hip-hop, jazz, classical, world and meditation from London, Kingston, New York and beyond.</p>
+      <p>Music, news, weather and live scanners from London, Kingston, New York and beyond.</p>
     </div>
     <div class="clock" aria-live="off">Kingston · London · NYC<b id="clock">--:-- · --:-- · --:--</b></div>
   </header>
@@ -207,6 +207,10 @@ footer a{color:var(--amber)}
       <option value="NL">Netherlands</option>
     </select>
     <button id="findGo" type="button">Scan</button>
+  </div>
+  <div id="feedAdd" class="search" hidden>
+    <input id="feedQ" type="text" inputmode="url" placeholder="Paste a Broadcastify feed link or number" aria-label="Broadcastify feed link or number">
+    <button id="feedGo" type="button">Add feed</button>
   </div>
 
   <section class="grid" id="grid" aria-live="polite"></section>
@@ -345,6 +349,32 @@ const STATIONS = [
   {g:"meditate", name:"Rain & Thunder", where:"Online", cc:"", fmt:"MP3", url:"https://boxradio-edge-01.streamafrica.net/rain", note:"Rain sounds"},
   {g:"meditate", name:"Ocean Waves", where:"Online", cc:"", fmt:"MP3", url:"https://stream.willstare.com:8860/", note:"Sleepscapes waves"},
   {g:"meditate", name:"Whisperings Solo Piano", where:"Online", cc:"", fmt:"MP3", url:"https://pianosolo.streamguys1.com/live", note:"Quiet solo piano"},
+
+  // News
+  {g:"news", name:"BBC World Service", where:"London, UK", cc:"GB", q:"BBC World Service", note:"Global news, 24/7"},
+  {g:"news", name:"BBC Radio 4", where:"London, UK", cc:"GB", q:"BBC Radio 4", note:"News, talk and drama"},
+  {g:"news", name:"LBC", where:"London, UK", cc:"GB", q:"LBC", note:"London news and talk"},
+  {g:"news", name:"NPR News", where:"Washington, US", cc:"US", fmt:"MP3", url:"https://npr-ice.streamguys1.com/live.mp3", q:"NPR", note:"National news"},
+  {g:"news", name:"WNYC 93.9", where:"New York, US", cc:"US", fmt:"MP3", url:"https://fm939.wnyc.org/wnycfm", q:"WNYC", note:"NYC public radio"},
+  {g:"news", name:"1010 WINS", where:"New York, US", cc:"US", q:"1010 WINS", note:"NYC all-news"},
+  {g:"news", name:"Bloomberg Radio", where:"New York, US", cc:"US", q:"Bloomberg Radio", note:"Business and markets"},
+  {g:"news", name:"C-SPAN Radio", where:"Washington, US", cc:"US", q:"C-SPAN", note:"Congress and public affairs"},
+  {g:"news", name:"RJR 94 FM", where:"Kingston, Jamaica", cc:"JM", q:"RJR", note:"Jamaica news and talk"},
+  {g:"news", name:"Nationwide 90 FM", where:"Kingston, Jamaica", cc:"JM", q:"Nationwide 90", note:"Jamaica news and talk"},
+  {g:"news", name:"franceinfo", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/franceinfo-hifi.aac", note:"French all-news"},
+
+  // Weather & NOAA
+  {g:"weather", name:"NOAA Weather Radio KWO35", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/25412", note:"162.550 MHz · NYC forecast"},
+  {g:"weather", name:"NY / NJ Marine", where:"New York Harbor, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/17329", note:"Coast Guard and marine weather"},
+  {g:"weather", name:"NOAA Weather Radio", where:"United States", cc:"US", q:"NOAA Weather Radio", note:"Top NOAA stream in the directory"},
+
+  // Police & Fire
+  {g:"scanner", name:"FDNY Citywide Dispatch", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/47800", note:"All boroughs"},
+  {g:"scanner", name:"FDNY Five Boroughs", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/9358", note:"Fire dispatch"},
+  {g:"scanner", name:"FDNY Manhattan", where:"Manhattan, NYC", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/46554", note:"Fire dispatch"},
+  {g:"scanner", name:"NYPD Citywide 1/2/3", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/47753", note:"Police citywide"},
+  {g:"scanner", name:"NYPD Transit Bronx/Manhattan", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/1189", note:"Subway police"},
+  {g:"scanner", name:"Hatzolah EMS", where:"New York City, US", cc:"US", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/7392", note:"Volunteer ambulance"},
 ];
 STATIONS.forEach(s => s.id = s.url || ("rb:" + s.name));
 
@@ -356,6 +386,9 @@ const BANDS = [
   {id:"world", label:"World", freq:"101.1", intro:"Afrobeats, soca, salsa, Bollywood, Arabic and Celtic, with Paris and New Orleans stations that roam the globe."},
   {id:"classical", label:"Classical", freq:"104.5", intro:"BBC Radio 3, WQXR and the great public classical stations."},
   {id:"meditate", label:"Meditation", freq:"106.2", intro:"Ambient drones, nature sounds and quiet piano for meditation, focus and sleep. Pair with the sleep timer."},
+  {id:"news", label:"News", freq:"AM 1010", intro:"World, national and local news from London, New York, Washington, Kingston and Paris."},
+  {id:"weather", label:"Weather", freq:"162.55", intro:"NOAA Weather Radio for New York City and harbor marine weather. To add your own area, paste its Broadcastify feed link in the Find band."},
+  {id:"scanner", label:"Police & Fire", freq:"154.4", intro:"Live FDNY, NYPD and EMS dispatch through Broadcastify. A short sponsor message may play first. To add your own area, find its feed on broadcastify.com and paste the link in the Find band."},
   {id:"fav", label:"Starred", freq:"★", intro:"Your starred stations, saved in this browser."},
   {id:"find", label:"Find", freq:"scan", intro:"Search the Radio Browser directory. Try “dub”, “roots reggae”, “dancehall”, “bebop” or a station name, and narrow by country."},
 ];
@@ -419,6 +452,7 @@ function render(){
   const b = BANDS.find(x => x.id === band) || BANDS[0];
   $("intro").textContent = b.intro;
   $("finder").hidden = band !== "find";
+  $("feedAdd").hidden = band !== "find";
   const grid = $("grid"); grid.innerHTML = "";
   let list = band === "fav" ? favs : band === "find" ? findResults : STATIONS.filter(s => s.g === band);
   if(!list.length){
@@ -567,6 +601,14 @@ async function scan(){
   render();
 }
 $("findGo").onclick = scan;
+$("feedGo").onclick = () => {
+  const m = ($("feedQ").value.match(/(\d{3,6})/) || [])[1];
+  if(!m){ $("feedQ").value = ""; $("feedQ").placeholder = "Couldn't find a feed number. Paste the full link."; return; }
+  const st = {g:"scanner", name:"Scanner feed " + m, where:"Broadcastify", cc:"", fmt:"Scanner", url:"https://broadcastify.cdnstream1.com/" + m, id:"https://broadcastify.cdnstream1.com/" + m, note:"Added by you"};
+  if(!isFav(st)) toggleFav(st);
+  $("feedQ").value = "";
+  band = "fav"; store.set("lionsden.band", band); renderBands(); render(); tune(st);
+};
 $("findQ").onkeydown = e => { if(e.key === "Enter") scan(); };
 
 // World clock
