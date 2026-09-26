@@ -179,7 +179,7 @@ footer a{color:var(--amber)}
     <div class="brand">
       <h1><svg class="logo" viewBox="0 0 64 64" role="img" aria-label="Lion's Den logo"><polygon points="32.0,2.0 37.0,12.6 46.4,5.6 45.9,17.3 57.5,15.4 51.6,25.6 62.8,29.3 52.8,35.5 61.0,44.0 49.3,44.9 52.6,56.2 41.8,51.6 39.4,63.1 32.0,54.0 24.6,63.1 22.2,51.6 11.4,56.2 14.7,44.9 3.0,44.0 11.2,35.5 1.2,29.3 12.4,25.6 6.5,15.4 18.1,17.3 17.6,5.6 27.0,12.6" fill="#f0a93b"/><circle cx="32" cy="34" r="19" fill="#b8741f"/><circle cx="22" cy="23" r="4.5" fill="#f6c870"/><circle cx="42" cy="23" r="4.5" fill="#f6c870"/><ellipse cx="32" cy="36" rx="13" ry="14.5" fill="#f6c870"/><ellipse cx="27" cy="33" rx="2.2" ry="1.5" fill="#14120f"/><ellipse cx="37" cy="33" rx="2.2" ry="1.5" fill="#14120f"/><path d="M28.5 39h7l-3.5 4z" fill="#14120f"/><path d="M32 43v2.5M32 45.5q-3 2-5 0M32 45.5q3 2 5 0" stroke="#14120f" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg><span class="nm">Lion's <span>Den</span></span></h1>
       <div class="rgg" aria-hidden="true"><i></i><i></i><i></i></div>
-      <p>Reggae, dub, jazz and classical from London, Kingston, New York and beyond.</p>
+      <p>Reggae, dub, hip-hop, jazz, classical, world and meditation from London, Kingston, New York and beyond.</p>
     </div>
     <div class="clock" aria-live="off">Kingston · London · NYC<b id="clock">--:-- · --:-- · --:--</b></div>
   </header>
@@ -196,7 +196,7 @@ footer a{color:var(--amber)}
       <option value="tag">Genre tag</option>
       <option value="name">Station name</option>
     </select>
-    <input id="findQ" type="search" placeholder="roots, dub, lovers rock, bebop…" aria-label="Search text" value="roots reggae">
+    <input id="findQ" type="search" placeholder="roots, trap, afrobeats, ambient…" aria-label="Search text" value="roots reggae">
     <select id="findCountry" aria-label="Country">
       <option value="">Anywhere</option>
       <option value="GB">United Kingdom</option>
@@ -306,14 +306,56 @@ const STATIONS = [
   {g:"classical", name:"Concertzender Baroque", where:"Netherlands", cc:"NL", q:"Concertzender Barok", note:"Baroque all day"},
   {g:"classical", name:"Radio Swiss Classic", where:"Switzerland", cc:"CH", fmt:"MP3", url:"https://stream.srg-ssr.ch/m/rsc_de/mp3_128", note:"Ad-free, no talk"},
   {g:"classical", name:"Ancient FM", where:"Online", cc:"", fmt:"MP3", url:"https://mediaserv73.live-streams.nl:18058/stream", note:"Medieval and Renaissance"},
+
+  // Hip-Hop & Trap
+  {g:"hiphop", name:"BBC Radio 1Xtra", where:"London, UK", cc:"GB", q:"BBC Radio 1Xtra", note:"Hip-hop, grime, dancehall"},
+  {g:"hiphop", name:"Rinse FM", where:"London, UK", cc:"GB", fmt:"MP3", url:"https://admin.stream.rinse.fm/proxy/rinse_uk/stream", q:"Rinse FM", note:"Grime, UK rap, bass"},
+  {g:"hiphop", name:"Reprezent Radio", where:"London, UK", cc:"GB", q:"Reprezent", note:"Young London voices"},
+  {g:"hiphop", name:"Hot 97", where:"New York, US", cc:"US", q:"Hot 97", note:"NYC hip-hop"},
+  {g:"hiphop", name:"Power 105.1", where:"New York, US", cc:"US", q:"Power 105.1", note:"NYC hip-hop and R&B"},
+  {g:"hiphop", name:"Hot 108 Jamz", where:"Online", cc:"", q:"Hot 108", note:"Hip-hop and R&B, 24/7"},
+  {g:"hiphop", name:"Trap Station", where:"Online", cc:"", q:"Trap", note:"Top trap station in the directory"},
+  {g:"hiphop", name:"FIP Hip-Hop", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/fiphiphop-hifi.aac", q:"FIP Hip-Hop", note:"Radio France, ad-free"},
+  {g:"hiphop", name:"Mouv'", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/mouv-hifi.aac", q:"Mouv'", note:"French and US rap"},
+  {g:"hiphop", name:"Mouv' Rap US", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/mouvrapus-hifi.aac", q:"Mouv Rap US", note:"US rap and trap"},
+  {g:"hiphop", name:"Mouv' Classics", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/mouvclassics-hifi.aac", q:"Mouv Classics", note:"Golden-era hip-hop"},
+
+  // World & ethnic
+  {g:"world", name:"FIP Monde", where:"Paris, France", cc:"FR", fmt:"AAC", url:"https://icecast.radiofrance.fr/fipworld-hifi.aac", q:"FIP Monde", note:"Music from every continent"},
+  {g:"world", name:"Radio Nova", where:"Paris, France", cc:"FR", fmt:"MP3", url:"https://novazz.ice.infomaniak.ch/novazz-128.mp3", q:"Radio Nova", note:"Global grooves"},
+  {g:"world", name:"WWOZ 90.7", where:"New Orleans, US", cc:"US", fmt:"MP3", url:"https://wwoz-sc.streamguys1.com/wwoz-hi.mp3", q:"WWOZ", note:"Jazz, roots, Caribbean, Afro"},
+  {g:"world", name:"Afrobeats", where:"Africa / UK", cc:"", q:"Afrobeats", note:"Top Afrobeats station in the directory"},
+  {g:"world", name:"Soca", where:"Caribbean", cc:"", q:"Soca", note:"Top soca station in the directory"},
+  {g:"world", name:"Salsa", where:"Latin America", cc:"", q:"Salsa", note:"Top salsa station in the directory"},
+  {g:"world", name:"Bollywood", where:"India", cc:"", q:"Bollywood", note:"Top Bollywood station in the directory"},
+  {g:"world", name:"Radio Sawa", where:"Middle East", cc:"", q:"Radio Sawa", note:"Arabic and Western pop"},
+  {g:"world", name:"SomaFM Suburbs of Goa", where:"San Francisco, US", cc:"US", fmt:"MP3", url:"https://ice2.somafm.com/suburbsofgoa-128-mp3", note:"Desi-influenced world beats"},
+  {g:"world", name:"SomaFM ThistleRadio", where:"San Francisco, US", cc:"US", fmt:"MP3", url:"https://ice2.somafm.com/thistle-128-mp3", note:"Celtic roots"},
+
+  // Meditation
+  {g:"meditate", name:"SomaFM Drone Zone", where:"San Francisco, US", cc:"US", fmt:"MP3 256", url:"https://ice2.somafm.com/dronezone-256-mp3", note:"Ambient drones, no beats"},
+  {g:"meditate", name:"SomaFM Deep Space One", where:"San Francisco, US", cc:"US", fmt:"MP3", url:"https://ice2.somafm.com/deepspaceone-128-mp3", note:"Deep ambient"},
+  {g:"meditate", name:"NTS – Slow Focus", where:"London, UK", cc:"GB", fmt:"MP3", url:"https://stream-mixtape-geo.ntslive.net/mixtape", note:"Ambient and drone"},
+  {g:"meditate", name:"Ambient Sleeping Pill", where:"Online", cc:"", q:"Ambient Sleeping Pill", note:"Beatless, for sleep"},
+  {g:"meditate", name:"Echoes of Bluemars", where:"Online", cc:"", q:"Bluemars", note:"Space ambient"},
+  {g:"meditate", name:"Moss Garden", where:"Online", cc:"", fmt:"MP3", url:"https://radio.moss.garden/listen/moss_garden/radio.mp3", note:"Environmental ambient"},
+  {g:"meditate", name:"Ambient.FM", where:"Online", cc:"", fmt:"MP3", url:"https://phoebe.streamerr.co:4140/ambient.mp3", note:"Calm ambient"},
+  {g:"meditate", name:"Birdsong FM", where:"United Kingdom", cc:"GB", fmt:"MP3", url:"https://a1.radio.co/s5c5da6a36/listen", note:"Birdsong only"},
+  {g:"meditate", name:"Ambinature Radio", where:"Online", cc:"", fmt:"MP3", url:"https://nature-rex.radioca.st/stream", note:"Nature sounds"},
+  {g:"meditate", name:"Rain & Thunder", where:"Online", cc:"", fmt:"MP3", url:"https://boxradio-edge-01.streamafrica.net/rain", note:"Rain sounds"},
+  {g:"meditate", name:"Ocean Waves", where:"Online", cc:"", fmt:"MP3", url:"https://stream.willstare.com:8860/", note:"Sleepscapes waves"},
+  {g:"meditate", name:"Whisperings Solo Piano", where:"Online", cc:"", fmt:"MP3", url:"https://pianosolo.streamguys1.com/live", note:"Quiet solo piano"},
 ];
 STATIONS.forEach(s => s.id = s.url || ("rb:" + s.name));
 
 const BANDS = [
   {id:"reggae", label:"Reggae", freq:"88.3", intro:"Roots, rocksteady and lovers rock, from London and Kingston out to Paris and California."},
   {id:"dub", label:"Dub", freq:"93.1", intro:"Echo, spring reverb and bass weight. UK sound-system stations and round-the-clock dub streams."},
+  {id:"hiphop", label:"Hip-Hop", freq:"96.9", intro:"Hip-hop, trap and grime from London and New York, plus Paris rap stations."},
   {id:"jazz", label:"Jazz", freq:"98.7", intro:"New York's own WBGO and WKCR, plus Paris, Seattle and Glasgow."},
+  {id:"world", label:"World", freq:"101.1", intro:"Afrobeats, soca, salsa, Bollywood, Arabic and Celtic, with Paris and New Orleans stations that roam the globe."},
   {id:"classical", label:"Classical", freq:"104.5", intro:"BBC Radio 3, WQXR and the great public classical stations."},
+  {id:"meditate", label:"Meditation", freq:"106.2", intro:"Ambient drones, nature sounds and quiet piano for meditation, focus and sleep. Pair with the sleep timer."},
   {id:"fav", label:"Starred", freq:"★", intro:"Your starred stations, saved in this browser."},
   {id:"find", label:"Find", freq:"scan", intro:"Search the Radio Browser directory. Try “dub”, “roots reggae”, “dancehall”, “bebop” or a station name, and narrow by country."},
 ];
