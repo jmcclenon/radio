@@ -1,0 +1,21 @@
+name: Validate radio finder skill
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/ai-radio-skill-v1]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile skill script
+        run: python3 -m py_compile skills/lions-den-radio-finder/scripts/find_stations.py
+      - name: Run offline unit tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
